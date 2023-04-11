@@ -1,7 +1,6 @@
 import Head from "next/head";
-import Image from "next/image";
-import { Inter } from "next/font/google";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import Example from "@/components/example";
 
 const queryClient = new QueryClient();
@@ -22,6 +21,7 @@ export default function Home() {
 					<Example></Example>
 				</div>
 			</main>
+			<ReactQueryDevtools initialIsOpen={false} />
 		</QueryClientProvider>
 	);
 }

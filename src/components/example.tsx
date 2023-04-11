@@ -1,6 +1,5 @@
 import { getData, postData } from "@/pages/api/postApi";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
 
 interface IPost {
 	author: string;
@@ -8,13 +7,16 @@ interface IPost {
 	id: number;
 }
 
-const URL = "http://localhost:5000/posts";
-
 export default function Example() {
-	const { isLoading, data, isError, error } = useQuery<IPost[]>(
-		["postsData"],
-		getData
-	);
+	const {
+		isLoading,
+		data,
+		isError,
+		refetch: refresh,
+	} = useQuery<IPost[]>(["postsData"], getData, {
+		refetchOnMount: false,
+		refetchOnWindowFocus: false,
+	});
 
 	const client = useQueryClient();
 
@@ -35,13 +37,19 @@ export default function Example() {
 
 	if (isLoading) return <>Loading...</>;
 
-	if (isError) return <>Error!: {error}</>;
+	if (isError) return <>Error!</>;
 
 	return (
 		<div>
-			<h1>Post Title: {data[0]?.postBody}</h1>
-			<p>User ID: {data[0]?.author}</p>
-			<p>There are {data.length.toString()} posts</p>
+			{data.map((d, i) => (
+				<>
+					<h1>Post Title: {d?.postBody}</h1>
+					<p>User ID: {d?.author}</p>
+					<p>There are {data.length.toString()} posts</p>
+				</>
+			))}
+			<button onClick={() => refresh()}>Refresh data</button>
+
 			<input type="text"></input>
 			<input type="text"></input>
 			<input type="text"></input>
